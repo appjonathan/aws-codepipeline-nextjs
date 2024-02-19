@@ -59,6 +59,24 @@ resource "aws_codepipeline" "pipeline" {
   }
 
   stage {
+    name = "Staging"
+
+    action {
+      name            = "Staging"
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "CodeDeploy"
+      input_artifacts = ["build_output"]
+      version         = "1"
+
+      configuration = {
+        ApplicationName     = aws_codedeploy_app.starter.name
+        DeploymentGroupName = aws_codedeploy_deployment_group.starter.deployment_group_name
+      }
+    }
+  }
+
+  stage {
     name = "Approval"
     action {
       name     = "Manual_Approval"
